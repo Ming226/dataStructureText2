@@ -1,0 +1,202 @@
+#include<cstdlib>
+#include<iostream>
+using namespace std;
+
+const  int MAX_LIST_SIZE = 10;
+class Sqlist
+{
+
+public:
+	Sqlist(int x);//初始化最大元素个数为n的空线性表
+	virtual ~Sqlist();
+	int Length() const;//返回当前长度
+	bool insert(int pos, int const x);//插入一个值
+	bool del(int pos);//删除一个位置的值 
+	bool isEmpty();
+	bool isFull();
+	bool add(int n);//追加数组元素 
+	void show();//输出数组
+	void setSqlist(int postion, const int p);
+	int maxSize;
+private:
+	int count;
+	int *stu = NULL;
+};
+
+Sqlist::Sqlist(int x)
+{
+	maxSize = x;
+	if (stu != NULL) delete[]stu;
+	stu = new int[maxSize];
+	count = 0;
+}
+
+Sqlist::~Sqlist()
+{
+	delete[]stu;
+	stu = NULL;
+}
+
+int Sqlist::Length() const
+{
+	return count;
+}
+
+bool Sqlist::isEmpty()
+{
+	return count == 0 ? true : false;
+}
+
+bool Sqlist::isFull()
+{
+	return count == maxSize ? true : false;
+}
+
+void Sqlist::setSqlist(int postion, const int p)
+{
+	if (postion < 1 || postion > Length())
+		cout << "位置范围错误" << endl;
+	else
+	{
+		stu[postion - 1] = p;
+		cout << "设置成功" << endl;
+
+	}
+}
+
+bool Sqlist::add(int n)
+{
+	if (isFull()) return false;
+	else
+	{
+		stu[count++] = n;
+		return true;
+	}
+}
+
+bool Sqlist::insert(int pos, const int x)
+{
+	int len = Length();
+	if (isFull())
+	{
+		return false;
+		cout << "数组已满" << endl;
+	}
+	else if (pos < 1 || pos > Length() + 1)
+	{
+		return false;
+		cout << "位置错误" << endl;
+	}
+	else
+	{
+		count++;
+		for (int i = len; i >= pos - 1; i--)
+		{
+			stu[i + 1] = stu[i];
+		}
+		setSqlist(pos, x);
+		return true;
+	}
+
+
+}
+
+bool Sqlist::del(int pos)
+{
+	int len = Length();
+	if (pos < 1 || pos > len)
+	{
+		return false;
+		cout << "位置错误" << endl;
+	}
+	else
+	{
+		count--;
+		for (int i = pos ; i <= len; i++)
+		{
+			stu[i - 1] = stu[i];
+		}
+		return true;
+	}
+}
+
+void Sqlist::show()
+{
+	if (isEmpty()) cout << "数组为空" << endl;
+	else
+	{
+		for (int i = 0; i < count; i++)
+		{
+			cout << stu[i] << " ";
+		}
+		cout << endl;
+	}
+}
+
+
+int main()
+{
+	using namespace std;
+	int n;
+	cout << "请输入数据个数" << endl;
+	cin >> n;
+	Sqlist text(n);
+	while (1)
+	{
+
+		int op;
+		cout << "请选择要进行的操作" << endl
+			<< "1:追加数组元素" << endl
+			<< "2:获取数组长度" << endl
+			<< "3:在某一位置插入某一数组元素" << endl
+			<< "4:删除某一位置的元素" << endl
+			<< "5:输出数组所有元素" << endl
+			<< "6:设置" << endl
+			<< "0:退出" << endl;
+		cin >> op;
+		if (op == 0)
+			break;
+		int pos, opnum;
+		switch (op)
+		{
+		case 1:
+			int number;
+			cout << "请输入追加元素个数" << endl;
+			cin >> number;
+			for (int i = 0; i < number; i++)
+			{
+				int temp;
+				cin >> temp;
+				if (text.add(temp) == true)
+					cout << "追加成功" << endl;
+				else
+					cout << "追加失败" << endl;
+			}
+			break;
+		case 2:
+			cout << text.Length() << endl;
+			break;
+		case 3:
+			cout << "请输入位置和元素" << endl;
+			cin >> pos >> opnum;
+			text.insert(pos, opnum);
+			break;
+		case 4:
+			cout << "请输入位置" << endl;
+			cin >> pos;
+			text.del(pos);
+			break;
+		case 5:
+			text.show();
+			break;
+		case 6:
+			cout << "请输入位置和元素" << endl;
+			cin >> pos >> opnum;
+			text.setSqlist(pos, opnum);
+			break;
+
+		}
+	}
+	return 0;
+}
+
